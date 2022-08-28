@@ -57,6 +57,7 @@ var (
 	vlExtraFlags      *[]string
 	mapAllPorts       bool
 	noMev             bool
+	noProm            bool
 )
 
 const (
@@ -246,6 +247,7 @@ func runCliCmd(cmd *cobra.Command, args []string) []error {
 		VlExtraFlags:      *vlExtraFlags,
 		MapAllPorts:       mapAllPorts,
 		Mev:               !noMev,
+		Prom:              !noProm,
 	}
 	elPort, clPort, err := generate.GenerateScripts(gd)
 	if err != nil {
@@ -338,6 +340,8 @@ func init() {
 	cliCmd.Flags().BoolVarP(&y, "yes", "y", false, "Shortcut for 'sedge cli -r -i --run'. Run without prompts")
 
 	cliCmd.Flags().BoolVar(&mapAllPorts, "map-all", false, "Map all clients ports to host. Use with care. Useful to allow remote access to the clients")
+
+	cliCmd.Flags().BoolVar(&noProm, "no-prometheus-monitoring", false, "Not use prometheus monitoring")
 
 	services = cliCmd.Flags().StringSlice("run-clients", []string{execution, consensus}, "Run only the specified clients. Possible values: execution, consensus, validator, all, none. The 'all' and 'none' option must be used alone. Example: 'sedge cli -r --run-clients=consensus,validator'")
 

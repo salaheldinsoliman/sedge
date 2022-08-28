@@ -19,8 +19,18 @@ services:
       - -relay-check
       - -relays
       - ${RELAY_URL}{{end}}
+
 {{template "consensus" .}}
 {{template "validator" .}}
+{{if .Prom}}
+  prometheus:
+    image: ubuntu/prometheus
+    network_mode: host
+    container_name: prometheus-container
+    volumes:
+      - '/home/maco/Desktop/prometheus.yml:/etc/prometheus/prometheus.yml'
+    environment:
+      - TZ=UTC{{ end }}
 
 networks:
   sedge:

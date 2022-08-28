@@ -55,6 +55,7 @@ type GenerationData struct {
 	MapAllPorts       bool
 	Mev               bool
 	Ports             map[string]string
+	Prom              bool
 }
 
 // DockerComposeData : Struct Data object to be applied to docker-compose script
@@ -64,6 +65,7 @@ type DockerComposeData struct {
 	VlPrysmCfg          bool
 	XeeVersion          bool
 	Mev                 bool
+	Prom                bool
 	MevPort             string
 	CheckpointSyncUrl   string
 	FeeRecipient        string

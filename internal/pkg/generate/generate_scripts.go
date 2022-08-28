@@ -172,6 +172,7 @@ func generateDockerComposeScripts(gd GenerationData) (err error) {
 		VlPrysmCfg:          vlPrysmCfg,
 		XeeVersion:          xeeVersion,
 		Mev:                 mev && gd.Mev,
+		Prom:                gd.Prom,
 		MevPort:             gd.Ports["MevPort"],
 		CheckpointSyncUrl:   gd.CheckpointSyncUrl,
 		FeeRecipient:        gd.FeeRecipient,
