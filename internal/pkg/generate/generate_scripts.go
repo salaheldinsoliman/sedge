@@ -320,11 +320,21 @@ func generatePromFile(gd GenerationData) (err error) {
 		return
 	}
 
-	/*clients := map[string]string{
+	clients := map[string]string{
 		"execution": gd.ExecutionClient,
 		"consensus": gd.ConsensusClient,
 		"validator": gd.ValidatorClient,
-	}*/
+	}
+	for tmpKind, clientName := range clients {
+		tmp, err := templates.Envs.ReadFile(filepath.Join("envs", gd.Network, tmpKind, clientName+".tmpl"))
+		if err != nil {
+			return err
+		}
+		_, err = baseTmp.Parse(string(tmp))
+		if err != nil {
+			return err
+		}
+	}
 
 	// TODO: Use OS wise delimiter for these data structs
 	data := PrometheusData{
