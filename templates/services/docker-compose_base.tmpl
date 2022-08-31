@@ -28,7 +28,7 @@ services:
     network_mode: host
     container_name: prometheus-container
     volumes:
-      - '/home/maco/Desktop/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - 'prometheus.yml:/etc/prometheus/prometheus.yml'
     environment:
       - TZ=UTC{{ end }}
 

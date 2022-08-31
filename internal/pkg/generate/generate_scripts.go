@@ -89,6 +89,12 @@ func GenerateScripts(gd GenerationData) (elPort, clPort string, err error) {
 		return "", "", err
 	}
 
+	log.Info(configs.GeneratingEnvFile)
+	err = generatePromFile(gd)
+	if err != nil {
+		return "", "", err
+	}
+
 	return ports["ELApi"], ports["CLApi"], nil
 }
 
@@ -299,6 +305,47 @@ func generateEnvFile(gd GenerationData) (err error) {
 		return fmt.Errorf(configs.GeneratingScriptsError, gd.ExecutionClient, gd.ConsensusClient, gd.ValidatorClient, err)
 	}
 	log.Infof(configs.CreatedFile, filepath.Join(gd.GenerationPath, ".env"))
+
+	return nil
+}
+
+func generatePromFile(gd GenerationData) (err error) {
+	rawBaseTmp, err := templates.Services.ReadFile(filepath.Join("services", "prometheus.tmpl"))
+	if err != nil {
+		return
+	}
+
+	baseTmp, err := template.New("prometheus").Parse(string(rawBaseTmp))
+	if err != nil {
+		return
+	}
+
+	/*clients := map[string]string{
+		"execution": gd.ExecutionClient,
+		"consensus": gd.ConsensusClient,
+		"validator": gd.ValidatorClient,
+	}*/
+
+	// TODO: Use OS wise delimiter for these data structs
+	data := PrometheusData{
+		ClMetricsPort: gd.Ports["CLMetrics"],
+		VlMetricsPort: gd.Ports["VLMetrics"],
+		ElMetricsPort: gd.Ports["ELMetrics"],
+	}
+
+	// Print .env file
+	log.Infof(configs.PrintingFile, ".yml")
+	err = baseTmp.Execute(os.Stdout, data)
+	if err != nil {
+		return fmt.Errorf(configs.PrintingFileError, ".yml", err)
+	}
+	fmt.Println()
+
+	err = writeTemplateToFile(baseTmp, filepath.Join(gd.GenerationPath, "prometheus.yml"), data, false)
+	if err != nil {
+		return fmt.Errorf(configs.GeneratingScriptsError, gd.ExecutionClient, gd.ConsensusClient, gd.ValidatorClient, err)
+	}
+	log.Infof(configs.CreatedFile, filepath.Join(gd.GenerationPath, "prometheus.yml"))
 
 	return nil
 }

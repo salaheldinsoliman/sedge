@@ -86,3 +86,9 @@ type DockerComposeData struct {
 	MapAllPorts         bool
 	SplittedNetwork     bool
 }
+
+type PrometheusData struct {
+	ElMetricsPort string
+	ClMetricsPort string
+	VlMetricsPort string
+}
